@@ -1,8 +1,11 @@
-import { useState, Suspense, lazy } from 'react';
+import { useState, Suspense, lazy, useEffect } from 'react';
 import Header from './components/Header';
 import OceanMap from './components/OceanMap';
 import SatellitePanel from './components/SatellitePanel';
 import MissionsPanel from './components/MissionsPanel';
+import WelcomeScreen from './components/WelcomeScreen';
+import HelpTutorial from './components/HelpTutorial';
+import InfoPanel from './components/InfoPanel';
 import { useRealTimeData } from './hooks/useRealTimeData';
 import { useAdvancedSystemMetrics } from './hooks/useAdvancedSystemMetrics';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -13,6 +16,9 @@ const AnalyticsPanel = lazy(() => import('./components/AnalyticsPanel'));
 
 function App() {
   const [activeTab, setActiveTab] = useState('map');
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [showHelp, setShowHelp] = useState(false);
+  
   const { 
     plasticHotspots, 
     vessels, 
@@ -31,6 +37,24 @@ function App() {
   } = useRealTimeData();
   
   const { metrics } = useAdvancedSystemMetrics();
+
+  // Check if user has seen welcome screen before
+  useEffect(() => {
+    const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
+    if (hasSeenWelcome === 'true') {
+      setShowWelcome(false);
+    }
+  }, []);
+
+  const handleGetStarted = () => {
+    localStorage.setItem('hasSeenWelcome', 'true');
+    setShowWelcome(false);
+  };
+
+  // Show welcome screen first
+  if (showWelcome) {
+    return <WelcomeScreen onGetStarted={handleGetStarted} />;
+  }
 
   // Enhanced error handling with retry capability
   if (error && plasticHotspots.length === 0 && !isLoading) {
@@ -80,6 +104,8 @@ function App() {
           />;
         case 'missions':
           return <MissionsPanel missions={missions} vessels={vessels} />;
+        case 'about':
+          return <InfoPanel className="p-6 max-w-6xl mx-auto" />;
         case 'analytics':
           return (
             <Suspense fallback={<div>Loading Analytics...</div>}>
@@ -168,13 +194,17 @@ function App() {
           activeTab={activeTab} 
           onTabChange={setActiveTab} 
           isLive={true} 
-          lastUpdate={lastUpdate} 
+          lastUpdate={lastUpdate}
+          onShowHelp={() => setShowHelp(true)}
         />
         <main className={`h-[calc(100vh-3rem)] sm:h-[calc(100vh-4rem)] ${
           activeTab === 'map' ? 'overflow-hidden' : 'overflow-y-auto'
         }`}>
           {renderContent()}
         </main>
+        
+        {/* Help Tutorial Overlay */}
+        <HelpTutorial isOpen={showHelp} onClose={() => setShowHelp(false)} />
       </div>
     </ErrorBoundary>
   );

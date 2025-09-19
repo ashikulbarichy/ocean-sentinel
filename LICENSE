@@ -1,0 +1,45 @@
+MIT License
+
+Copyright (c) 2024 Ocean Sentinel - AI-Driven Ocean Plastic Cleanup
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Additional Terms for NASA Data
+
+This software incorporates data from NASA's Earth Science Data Systems, including
+but not limited to CYGNSS, MODIS, and Sentinel missions. Use of this data is
+subject to NASA's data use policies:
+
+- NASA Earthdata: https://earthdata.nasa.gov/collaborate/open-data-services-and-software/data-information-policy
+- CYGNSS Data Policy: https://cygnss.eecs.umich.edu/data-products/
+- MODIS Data Policy: https://modis.gsfc.nasa.gov/data/datapolicy/
+
+## Acknowledgments
+
+This project was developed for the NASA Space Apps Challenge 2024 and builds upon
+the foundation of open science and Earth observation data provided by NASA and
+international space agencies.
+
+Special thanks to:
+- NASA Goddard Space Flight Center
+- University of Michigan CYGNSS Team
+- European Space Agency (ESA) Sentinel Program
+- NOAA Environmental Data Services

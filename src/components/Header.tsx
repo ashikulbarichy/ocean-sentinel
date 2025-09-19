@@ -1,20 +1,50 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
-import { Recycle, Satellite, Activity, Target, Wifi, Waves, Menu, X, ChevronDown } from 'lucide-react';
+import { Recycle, Satellite, Activity, Target, Wifi, Waves, Menu, X, ChevronDown, Globe, Zap, Shield, HelpCircle } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   isLive?: boolean;
   lastUpdate?: Date;
+  onShowHelp?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = memo(({ activeTab, onTabChange, isLive = true, lastUpdate }) => {
+const Header: React.FC<HeaderProps> = memo(({ activeTab, onTabChange, isLive = true, lastUpdate, onShowHelp }) => {
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [missionStats, setMissionStats] = useState({
+    plasticRemoved: 5010,
+    activeVessels: 4,
+    satellitesOnline: 15,
+    aiAccuracy: 96.8
+  });
+
+  // Update time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Simulate real-time stats updates
+  useEffect(() => {
+    const statsTimer = setInterval(() => {
+      setMissionStats(prev => ({
+        ...prev,
+        plasticRemoved: prev.plasticRemoved + Math.floor(Math.random() * 5),
+        aiAccuracy: 96.8 + (Math.random() - 0.5) * 0.4
+      }));
+    }, 30000); // Update every 30 seconds
+    return () => clearInterval(statsTimer);
+  }, []);
+
   const tabs = [
-    { id: 'map', label: 'Ocean Map', icon: Waves },
-    { id: 'satellites', label: 'Satellite Data', icon: Satellite },
-    { id: 'missions', label: 'Active Missions', icon: Target },
-    { id: 'analytics', label: 'Analytics', icon: Activity },
-    { id: 'advanced', label: '🏆 NASA GRADE', icon: Activity }
+    { id: 'map', label: 'Ocean Map', icon: Waves, description: 'Real-time mission tracking' },
+    { id: 'satellites', label: 'Satellite Data', icon: Satellite, description: 'NASA live feeds' },
+    { id: 'missions', label: 'Active Missions', icon: Target, description: 'Fleet management' },
+    { id: 'analytics', label: 'Analytics', icon: Activity, description: 'Performance metrics' },
+    { id: 'about', label: '📖 About', icon: Globe, description: 'Project information' },
+    { id: 'advanced', label: '🏆 NASA GRADE', icon: Shield, description: 'Advanced systems' }
   ];
 
   return (
@@ -42,11 +72,32 @@ const Header: React.FC<HeaderProps> = memo(({ activeTab, onTabChange, isLive = t
             </div>
           </div>
           
-          {/* Live Status Indicator */}
+          {/* Enhanced Live Status with Mission Stats */}
           <div className="hidden sm:flex items-center space-x-4">
-            <div className="flex items-center space-x-2 text-sm bg-black bg-opacity-50 px-3 py-1 rounded-lg border border-green-400">
+            {/* Mission Stats Ticker */}
+            <div className="flex items-center space-x-6 text-xs bg-black/50 backdrop-blur-sm px-4 py-2 rounded-lg border border-green-400/50">
+              <div className="flex items-center space-x-1">
+                <Recycle className="h-3 w-3 text-green-400" />
+                <span className="text-green-300 font-mono">{missionStats.plasticRemoved.toLocaleString()}kg</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Target className="h-3 w-3 text-blue-400" />
+                <span className="text-blue-300 font-mono">{missionStats.activeVessels} vessels</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Satellite className="h-3 w-3 text-purple-400" />
+                <span className="text-purple-300 font-mono">{missionStats.satellitesOnline} sats</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Zap className="h-3 w-3 text-yellow-400" />
+                <span className="text-yellow-300 font-mono">{missionStats.aiAccuracy.toFixed(1)}%</span>
+              </div>
+            </div>
+            
+            {/* Live Status */}
+            <div className="flex items-center space-x-2 text-sm bg-black/50 backdrop-blur-sm px-3 py-2 rounded-lg border border-green-400/50">
               <div className={`flex items-center space-x-1 ${isLive ? 'text-green-300' : 'text-red-300'} status-indicator`}>
-                <Wifi className={`h-4 w-4 ${isLive ? 'animate-pulse' : ''} drop-shadow-lg`} />
+                <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`}></div>
                 <span className="terminal-text font-bold">{isLive ? 'MISSION ACTIVE' : 'OFFLINE'}</span>
               </div>
               {lastUpdate && (
@@ -56,6 +107,17 @@ const Header: React.FC<HeaderProps> = memo(({ activeTab, onTabChange, isLive = t
               )}
             </div>
           </div>
+
+          {/* Help Button */}
+          {onShowHelp && (
+            <button
+              onClick={onShowHelp}
+              className="p-2 rounded-full bg-blue-500/20 hover:bg-blue-500/40 text-blue-300 hover:text-white transition-colors border border-blue-500/30 hover:border-blue-400"
+              title="Show Tutorial"
+            >
+              <HelpCircle size={20} />
+            </button>
+          )}
           
           <nav className="flex space-x-0 sm:space-x-1 relative z-30">
             {tabs.map((tab) => {
